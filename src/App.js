@@ -1,6 +1,6 @@
 import React, { useState } from "react";
+import Content from "./components/content/content.component";
 import Form from "./components/form/form.component";
-import Menu from "./components/menu/menu.component";
 
 function App() {
   const [user, setUser] = useState("");
@@ -10,7 +10,7 @@ function App() {
       {user.length < 1 ? (
         <Form setUser={(v) => setUser(v)} />
       ) : (
-        <Menu changeUser={() => setUser("")} />
+        <Content changeUser={() => setUser("")} user={user} />
       )}
     </div>
   );

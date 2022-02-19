@@ -1,15 +1,12 @@
 import React from "react";
 
-function Menu({ changeUser }) {
-  const logout = () => {
-    changeUser();
-  };
-
+function Menu({ changeUser, chooseContent, user }) {
   return (
     <div>
-      <button>Start!</button>
-      <button>High Scores</button>
-      <button onClick={logout}>Change user</button>
+      Hello, {user}!
+      <button onClick={() => chooseContent("game")}>Start!</button>
+      <button onClick={() => chooseContent("hiscores")}>High Scores</button>
+      <button onClick={changeUser}>Change user</button>
     </div>
   );
 }
