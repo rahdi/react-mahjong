@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import getSymbol from "./getSymbol";
 
-function Tile({ symbol, level, row, column, maxRows, maxColumns }) {
+import "./tile.styles.css";
+
+function Tile({
+  symbol,
+  level,
+  row,
+  column,
+  maxRows,
+  maxColumns,
+  isTileClickable,
+}) {
+  const [clicked, setClicked] = useState(false);
+
   const width = 80 / maxColumns;
   const height = 80 / maxRows;
   const top = row * height;
   const left = column * width;
-  const backgroundColor =
-    level % 2 ? "hsl(210, 60%, 80%)" : "hsl(210, 60%, 90%)";
+  const backgroundColor = level % 2 ? "darker" : "lighter";
   const transformedSymbol = getSymbol(symbol);
   let fontSize = "3vh";
 
@@ -21,21 +32,29 @@ function Tile({ symbol, level, row, column, maxRows, maxColumns }) {
     }
   }
 
+  const handleClick = () => {
+    if (isTileClickable) {
+      if (clicked) {
+        setClicked(false);
+      } else {
+        setClicked(true);
+      }
+    }
+  };
+
   return (
     <button
-      className="tile"
+      className={`tile ${
+        isTileClickable ? "clickable" : ""
+      } ${backgroundColor} ${clicked ? "clicked" : ""}`}
       style={{
-        position: "absolute",
         top: top + "vh",
         left: left + "vw",
         width: width + "vw",
         height: height + "vh",
-        borderRadius: "1vw",
-        border: "1px solid hsl(210, 100%, 25%)",
-        boxShadow: "1vw 1vh 1vw hsl(210, 100%, 25%)",
-        backgroundColor: backgroundColor,
         fontSize: fontSize,
       }}
+      onClick={handleClick}
     >
       {transformedSymbol}
     </button>

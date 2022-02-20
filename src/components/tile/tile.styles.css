@@ -1,0 +1,30 @@
+.tile {
+  position: absolute;
+  border: 1px solid hsl(210, 100%, 25%);
+  box-shadow: 1vw 1vh 1vw hsl(210, 100%, 25%);
+  border-radius: 1vw;
+}
+
+.lighter {
+  background-color: hsl(210, 60%, 85%);
+}
+
+.darker {
+  background-color: hsl(210, 60%, 75%);
+}
+
+.clickable:hover {
+  background-color: hsl(210, 100%, 100%);
+}
+
+.clickable:active {
+  background-color: hsl(120, 100%, 80%);
+}
+
+.clicked {
+  background-color: hsl(120, 100%, 90%);
+}
+
+.clicked:hover {
+  background-color: hsl(120, 100%, 90%);
+}

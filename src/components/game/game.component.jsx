@@ -4,12 +4,12 @@ import getTemplate from "./template";
 
 function Game() {
   const [layout, setLayout] = useState();
-  const [refresh, setRefresh] = useState(Math.random());
   const rows = 8;
   const columns = 15; //
 
+  // Create an empty layout object and fill it with letters
   useEffect(() => {
-    const allPieces =
+    let allPieces =
       "abcdefghijklmnopqrstuvwxyzABCDEFGHIJabcdefghijklmnopqrstuvwxyzABCDEFGHIJabcdefghijklmnopqrstuvwxyzABCDEFGHIJabcdefghijklmnopqrstuvwxyzABCDEFGHIJ";
     const template = getTemplate();
     const filledLayout = {};
@@ -22,8 +22,11 @@ function Game() {
           const filledRow = {};
           for (let x = 0; x < columns; x = x + 0.5) {
             if (tplRow[x] !== undefined) {
-              const randomIndex = parseInt(143 * Math.random());
+              const randomIndex = parseInt(
+                (allPieces.length - 1) * Math.random()
+              );
               filledRow[x] = allPieces[randomIndex];
+              allPieces = allPieces.replace(allPieces[randomIndex], "");
             }
           }
           filledLevel[y] = filledRow;
@@ -37,6 +40,7 @@ function Game() {
   if (!layout) {
     return <div>Loading...</div>;
   } else {
+    // Make a layout of tiles from layout object
     const gameLayout = [];
     for (let L = 0; L < Object.keys(layout).length; L++) {
       if (layout[L] !== undefined) {
@@ -44,15 +48,66 @@ function Game() {
         for (let x = 0; x < columns; x = x + 0.5) {
           for (let y = 0; y < rows; y = y + 0.5) {
             if (layout[L][y] !== undefined && layout[L][y][x] !== undefined) {
+              let isLeftSideEmpty = true;
+              let isRightSideEmpty = true;
+              let isAboveEmpty = true;
+              let isTileClickable = true;
+              if (
+                layout[L][y][x - 1] ||
+                (layout[L][y - 0.5] && layout[L][y - 0.5][x - 1]) ||
+                (layout[L][y + 0.5] && layout[L][y + 0.5][x - 1])
+              ) {
+                isLeftSideEmpty = false;
+              }
+              if (
+                layout[L][y][x + 1] ||
+                (layout[L][y - 0.5] && layout[L][y - 0.5][x + 1]) ||
+                (layout[L][y + 0.5] && layout[L][y + 0.5][x + 1])
+              ) {
+                isRightSideEmpty = false;
+              }
+              if (layout[L + 1]) {
+                if (layout[L + 1][y]) {
+                  if (
+                    layout[L + 1][y][x] ||
+                    layout[L + 1][y][x + 0.5] ||
+                    layout[L + 1][y][x - 0.5]
+                  ) {
+                    isAboveEmpty = false;
+                  }
+                }
+                if (layout[L + 1][y + 0.5]) {
+                  if (
+                    layout[L + 1][y + 0.5][x] ||
+                    layout[L + 1][y + 0.5][x + 0.5] ||
+                    layout[L + 1][y + 0.5][x - 0.5]
+                  ) {
+                    isAboveEmpty = false;
+                  }
+                }
+                if (layout[L + 1][y - 0.5]) {
+                  if (
+                    layout[L + 1][y - 0.5][x] ||
+                    layout[L + 1][y - 0.5][x + 0.5] ||
+                    layout[L + 1][y - 0.5][x - 0.5]
+                  ) {
+                    isAboveEmpty = false;
+                  }
+                }
+              }
+              if (!isAboveEmpty || (!isLeftSideEmpty && !isRightSideEmpty)) {
+                isTileClickable = false;
+              }
               oneLevel.push(
                 <Tile
-                  key={`tile-${L}${y}${x}${refresh}`}
+                  key={`tile-${L}${y}${x}`}
                   symbol={layout[L][y][x]}
                   level={L}
                   row={y}
                   column={x}
                   maxRows={rows}
                   maxColumns={columns}
+                  isTileClickable={isTileClickable}
                 />
               );
             }
@@ -72,6 +127,7 @@ function Game() {
         );
       }
     }
+
     return (
       <div
         style={{
