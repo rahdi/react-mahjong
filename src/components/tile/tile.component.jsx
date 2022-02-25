@@ -11,9 +11,9 @@ function Tile({
   maxRows,
   maxColumns,
   isTileClickable,
+  chooseTile,
+  clicked,
 }) {
-  const [clicked, setClicked] = useState(false);
-
   const width = 80 / maxColumns;
   const height = 80 / maxRows;
   const top = row * height;
@@ -34,11 +34,7 @@ function Tile({
 
   const handleClick = () => {
     if (isTileClickable) {
-      if (clicked) {
-        setClicked(false);
-      } else {
-        setClicked(true);
-      }
+      chooseTile({ level, row, column, symbol });
     }
   };
 

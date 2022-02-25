@@ -4,6 +4,7 @@ import getTemplate from "./template";
 
 function Game() {
   const [layout, setLayout] = useState();
+  const [tileChosen, setTileChosen] = useState({});
   const rows = 8;
   const columns = 15; //
 
@@ -36,6 +37,27 @@ function Game() {
     }
     setLayout(filledLayout);
   }, []);
+
+  const chooseTile = (props) => {
+    const { level, row, column, symbol } = props;
+    if (Object.keys(tileChosen).length === 0) {
+      setTileChosen({ level, row, column, symbol });
+    } else {
+      if (tileChosen.symbol === symbol) {
+        removeTiles([tileChosen, props]);
+      }
+      setTileChosen({});
+    }
+  };
+
+  const removeTiles = (tiles) => {
+    const newLayout = JSON.parse(JSON.stringify(layout));
+    for (let i of tiles) {
+      const { level, row, column } = i;
+      newLayout[level][row][column] = undefined;
+    }
+    setLayout(newLayout);
+  };
 
   if (!layout) {
     return <div>Loading...</div>;
@@ -98,6 +120,14 @@ function Game() {
               if (!isAboveEmpty || (!isLeftSideEmpty && !isRightSideEmpty)) {
                 isTileClickable = false;
               }
+              let clicked = false;
+              if (
+                tileChosen.level === L &&
+                tileChosen.row === y &&
+                tileChosen.column === x
+              ) {
+                clicked = true;
+              }
               oneLevel.push(
                 <Tile
                   key={`tile-${L}${y}${x}`}
@@ -107,7 +137,9 @@ function Game() {
                   column={x}
                   maxRows={rows}
                   maxColumns={columns}
-                  isTileClickable={isTileClickable}
+                  isTileClickable={clicked ? false : isTileClickable}
+                  chooseTile={chooseTile}
+                  clicked={clicked}
                 />
               );
             }
