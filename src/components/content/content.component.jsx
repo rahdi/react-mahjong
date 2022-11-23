@@ -6,6 +6,8 @@ import Menu from "../menu/menu.component";
 function Content({ changeUser, user }) {
   const [type, setType] = useState("menu");
 
+  // comment
+
   const chooseContent = (content) => {
     setType(content);
   };
